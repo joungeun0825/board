@@ -12,16 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/login")
 public class AuthController {
     private final AuthService authService;
 
-    @GetMapping
+    @GetMapping("/login")
     public String loginPage() {
         return "login";
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public String login(@RequestParam String username,
                         @RequestParam String password,
                         HttpServletRequest request) {
@@ -31,8 +30,14 @@ public class AuthController {
             session.setAttribute("user", user);
             return "redirect:/board";
         } catch (IllegalArgumentException e) {
-            return "redirect:/login?error=true";  // 로그인 실패 시 /login으로 리다이렉트
+            return "redirect:/login?error=true";
         }
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
     }
 
 }
