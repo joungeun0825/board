@@ -34,6 +34,12 @@ public class PostService {
         postRepository.save(post);
     }
 
+    // 게시글 삭제
+    public void deletePost(Long id) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post Id"));
+        postRepository.delete(post); // 게시글 삭제
+    }
+
     public Post getPostById(Long id) {
         return postRepository.findById(id).orElse(null);
     }

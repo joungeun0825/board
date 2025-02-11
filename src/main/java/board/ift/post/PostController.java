@@ -98,4 +98,24 @@ public class PostController {
         postService.updatePost(id, title, content);
         return "redirect:/post/" + id; // 수정된 게시글 상세보기 페이지로 리다이렉트
     }
+
+    // 게시글 삭제
+    @PostMapping("/post/{id}/delete")
+    public String deletePost(@PathVariable Long id, HttpSession session) {
+        Post post = postService.getPostById(id);
+
+        if (post == null) {
+            return "redirect:/board";
+        }
+
+        // 현재 로그인한 사용자가 작성자인지 확인
+        User sessionUser = (User) session.getAttribute("user");
+        if (!post.getUser().getId().equals(sessionUser.getId())) {
+            return "redirect:/board"; // 작성자가 아니면 목록으로 리다이렉트
+        }
+
+        // 게시글 삭제
+        postService.deletePost(id);
+        return "redirect:/board"; // 게시글 목록으로 리다이렉트
+    }
 }
