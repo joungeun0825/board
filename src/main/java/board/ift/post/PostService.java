@@ -15,6 +15,7 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    // 게시글 작성
     public void savePost(String title, String content, User user) {
         Post post = Post.builder()
                 .title(title)
@@ -22,6 +23,14 @@ public class PostService {
                 .status(false)
                 .user(user)
                 .build();
+        postRepository.save(post);
+    }
+
+    // 게시글 수정
+    public void updatePost(Long id, String title, String content) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post Id"));
+        post.setTitle(title);
+        post.setContent(content);
         postRepository.save(post);
     }
 

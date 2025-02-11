@@ -58,4 +58,44 @@ public class PostController {
         // 상세보기 페이지로 이동
         return "view"; // Thymeleaf 템플릿을 렌더링
     }
+
+    // 게시글 수정 페이지
+    @GetMapping("/post/{id}/edit")
+    public String editPostForm(@PathVariable Long id, Model model, HttpSession session) {
+        Post post = postService.getPostById(id);
+
+        if (post == null) {
+            return "redirect:/board";
+        }
+
+        // 현재 로그인한 사용자가 작성자인지 확인
+        User sessionUser = (User) session.getAttribute("user");
+        if (!post.getUser().getId().equals(sessionUser.getId())) {
+            return "redirect:/board"; // 작성자가 아니면 목록으로 리다이렉트
+        }
+
+        model.addAttribute("post", post);
+        return "edit"; // 수정 페이지로 이동
+    }
+
+    // 게시글 수정 처리
+    @PostMapping("/post/{id}/edit")
+    public String editPost(@PathVariable Long id, @RequestParam String title,
+                           @RequestParam String content, HttpSession session) {
+        Post post = postService.getPostById(id);
+
+        if (post == null) {
+            return "redirect:/board";
+        }
+
+        // 현재 로그인한 사용자가 작성자인지 확인
+        User sessionUser = (User) session.getAttribute("user");
+        if (!post.getUser().getId().equals(sessionUser.getId())) {
+            return "redirect:/board"; // 작성자가 아니면 목록으로 리다이렉트
+        }
+
+        // 게시글 수정
+        postService.updatePost(id, title, content);
+        return "redirect:/post/" + id; // 수정된 게시글 상세보기 페이지로 리다이렉트
+    }
 }

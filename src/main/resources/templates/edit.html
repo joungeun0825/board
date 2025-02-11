@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>문의글 작성</title>
+  <title>문의 글 수정</title>
   <style>
     body {
         font-family: Arial, sans-serif;
@@ -53,30 +53,40 @@
     }
 
     .content {
-        margin-top: 60px;  /* 헤더 높이만큼 여백을 추가 */
+        margin-top: 60px;
         padding: 20px;
     }
 
     .form-container {
-        background-color: white;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         max-width: 600px;
         margin: 0 auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .form-container input,
-    .form-container textarea {
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    textarea {
         width: 100%;
         padding: 10px;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         border: 1px solid #ddd;
         border-radius: 5px;
-        font-size: 16px;
+        box-sizing: border-box;
     }
 
-    .form-container button {
+    button {
         padding: 10px 20px;
         background-color: #4CAF50;
         color: white;
@@ -85,18 +95,17 @@
         cursor: pointer;
     }
 
-    .form-container button:hover {
+    button:hover {
         background-color: #45a049;
     }
   </style>
 </head>
 <body>
-<!-- 헤더 영역 -->
 <header>
   <div class="menu">
     <h1 style="margin: 0; font-size: 24px;">문의 게시판</h1>
     <div class="user-menu">
-      <span th:text="'Hello, ' + ${session.user.username}"></span>
+      <span th:text="'어서오세요 ' + ${session.user.username} + '님'"></span>
       <form action="/logout" method="post" style="display:inline;">
         <button type="submit">로그아웃</button>
       </form>
@@ -104,23 +113,21 @@
   </div>
 </header>
 
-<!-- 본문 콘텐츠 -->
 <div class="content">
   <div class="form-container">
-    <h2>문의글 작성</h2>
-    <form action="/post/create" method="post">
+    <h2>문의 글 수정</h2>
+
+    <form th:action="@{'/post/' + ${post.id} + '/edit'}" method="post">
+      <input type="hidden" name="_method" value="POST"> <!-- 수정 요청을 POST로 보내기 위한 필드 -->
       <div>
-        <div class="date">
-          <strong>작성일자:</strong> <span th:text="${T(java.time.LocalDate).now()}"></span>
-        </div>
         <label for="title">제목</label>
-        <input type="text" id="title" name="title" required placeholder="제목을 입력하세요">
+        <input type="text" id="title" name="title" th:value="${post.title}" required>
       </div>
       <div>
         <label for="content">내용</label>
-        <textarea id="content" name="content" rows="5" required placeholder="내용을 입력하세요"></textarea>
+        <textarea id="content" name="content" rows="5" required th:text="${post.content}"></textarea>
       </div>
-      <button type="submit">작성 완료</button>
+      <button type="submit">수정 완료</button>
     </form>
   </div>
 </div>

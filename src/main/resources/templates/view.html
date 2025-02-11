@@ -98,7 +98,7 @@
 <!-- 헤더 영역 -->
 <header>
   <div class="menu">
-    <h1 style="margin: 0; font-size: 24px;">게시판</h1>
+    <h1 style="margin: 0; font-size: 24px;">문의 게시판</h1>
     <div class="user-menu">
       <!-- 사용자 이름 출력 -->
       <span th:text="'어서오세요 ' + ${session.user.username} + '님'"></span>
@@ -128,10 +128,15 @@
       답변여부: <span th:text="${post.status}">답변여부</span>
     </div>
 
-    <!-- 수정 및 삭제 버튼 추가 -->
+    <!-- 수정 및 삭제 버튼 -->
     <div>
-      <a href="/post/edit/{id}" th:href="@{/post/edit/{id}(id=${post.id})}">수정</a> |
-      <a href="/post/delete/{id}" th:href="@{/post/delete/{id}(id=${post.id})}">삭제</a>
+      <!-- 수정 버튼 (작성자만 보임) -->
+      <a th:href="@{/post/{id}/edit(id=${post.id})}" th:if="${post.user.username == session.user.username}">수정</a>
+
+      <!-- 삭제 버튼 (작성자만 보임) -->
+      <form th:action="@{/post/{id}/delete(id=${post.id})}" method="post" th:if="${post.user.username == session.user.username}">
+        <button type="submit">삭제</button>
+      </form>
     </div>
   </div>
 
