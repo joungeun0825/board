@@ -1,5 +1,6 @@
 package board.ift.post;
 
+import board.ift.answer.Answer;
 import board.ift.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -40,4 +42,7 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Answer> answers;
 }

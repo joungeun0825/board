@@ -1,17 +1,21 @@
 package board.ift.post;
 
+import board.ift.answer.Answer;
+import board.ift.answer.AnswerRepository;
 import board.ift.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final AnswerRepository answerRepository;
 
     public List<Post> getAllPosts() {
         return postRepository.findAll();
@@ -48,5 +52,27 @@ public class PostService {
 
     public Post getPostById(Long id) {
         return postRepository.findById(id).orElse(null);
+    }
+
+    public Page<Post> getPostsByDateRange(LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        return postRepository.findByCreatedDateBetween(startDate, endDate, pageable);
+    }
+
+    public void addAnswer(Long postId, String answerContent) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+
+        // 새로운 답변 객체 생성
+        Answer answer = new Answer();
+        answer.setPost(post);
+        answer.setContent(answerContent);
+        answer.setCreatedDate(LocalDate.now());
+
+        // 답변 저장
+        answerRepository.save(answer);
+    }
+
+    // 게시글 상태 업데이트
+    public void updatePost(Post post) {
+        postRepository.save(post);
     }
 }

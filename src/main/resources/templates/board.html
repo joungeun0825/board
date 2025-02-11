@@ -112,7 +112,17 @@
     <div>
         <a href="/post/create">문의 글 작성하기</a>
     </div>
+    <div>
+        <form action="/board" method="get">
+            <label for="startDate">시작일자:</label>
+            <input type="date" id="startDate" name="startDate">
 
+            <label for="endDate">종료일자:</label>
+            <input type="date" id="endDate" name="endDate">
+
+            <button type="submit">검색</button>
+        </form>
+    </div>
     <div>
         <table>
             <thead>
@@ -146,7 +156,7 @@
             </span>
 
             <span th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
-                <a th:href="@{/board?page={pageNum}(pageNum=${pageNum})}" th:text="${pageNum + 1}">1</a>
+                <a th:href="@{/board?page={pageNum}(pageNum=${pageNum})}" th:text="${pageNum + 1}"></a>
             </span>
 
             <span th:if="${currentPage < totalPages - 1}">

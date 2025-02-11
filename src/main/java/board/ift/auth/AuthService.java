@@ -1,5 +1,6 @@
 package board.ift.auth;
 
+import board.ift.user.Role;
 import board.ift.user.User;
 import board.ift.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,8 @@ public class AuthService {
 
     public User loginOrRegister(String username, String password) {
 
+        username = username.trim();
+
         Optional<User> userOptional = userRepository.findByUsername(username);
 
         // 존재하면 로그인
@@ -26,11 +29,13 @@ public class AuthService {
             }
         }
 
+        Role role = (username.equals("admin")) ? Role.ADMIN : Role.USER;
+
         // 존재하지 않으면 회원가입 후 로그인
         User newUser = User.builder()
                 .username(username)
                 .password(password)
-                .role("ROLE_USER")
+                .role(role)
                 .build();
 
         return userRepository.save(newUser);

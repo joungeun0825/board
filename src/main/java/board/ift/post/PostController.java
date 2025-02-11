@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -21,19 +22,35 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/board")
-    public String boardPage(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page) {
+    public String boardPage(Model model, HttpSession session,
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(required = false) LocalDate startDate,
+                            @RequestParam(required = false) LocalDate endDate) {
+
+        // 세션에서 사용자 정보를 가져옵니다
         User user = (User) session.getAttribute("user");
-        if (user == null) return "redirect:/login";
+        if (user == null) return "redirect:/login"; // 로그인되지 않으면 로그인 페이지로 리디렉션
 
+        // 페이지네이션 설정
         Pageable pageable = PageRequest.of(page, 3);
-        Page<Post> postPage = postService.getPosts(pageable);
 
+        // 날짜 범위가 주어졌을 경우 필터링된 게시물 가져오기
+        Page<Post> postPage;
+        if (startDate != null && endDate != null) {
+            postPage = postService.getPostsByDateRange(startDate, endDate, pageable);
+        } else {
+            postPage = postService.getPosts(pageable);
+        }
+
+        // 모델에 데이터를 추가하여 뷰로 전달
         model.addAttribute("posts", postPage.getContent());
         model.addAttribute("username", user.getUsername());
         model.addAttribute("totalPages", postPage.getTotalPages());
         model.addAttribute("currentPage", page);
-        return "board";
+
+        return "board"; // 'board' 뷰로 반환
     }
+
 
     @GetMapping("/post/create")
     public String createPostForm() {
