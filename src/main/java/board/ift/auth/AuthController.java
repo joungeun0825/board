@@ -1,5 +1,6 @@
 package board.ift.auth;
 
+import board.ift.user.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +26,9 @@ public class AuthController {
                         @RequestParam String password,
                         HttpServletRequest request) {
         try {
-            authService.loginOrRegister(username, password);
+            User user =  authService.loginOrRegister(username, password);
             HttpSession session = request.getSession();
-            session.setAttribute("user", username);
+            session.setAttribute("user", user);
             return "redirect:/board";
         } catch (IllegalArgumentException e) {
             return "redirect:/login?error=true";  // 로그인 실패 시 /login으로 리다이렉트
