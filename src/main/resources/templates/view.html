@@ -125,7 +125,7 @@
     <p th:text="${post.content}">내용</p>
 
     <div class="status">
-      답변여부: <span th:text="${post.status}">답변여부</span>
+      답변여부: <span th:text="${post.status ? '응답완료' : '미응답'}">답변여부</span>
     </div>
 
     <!-- 수정 및 삭제 버튼 -->

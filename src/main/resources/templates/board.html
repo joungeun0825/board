@@ -133,7 +133,7 @@
                 </td>
                 <td th:text="${post.content}">내용</td>
                 <td th:text="${post.user.username}">작성자</td>
-                <td th:text="${post.status}">답변여부</td>
+                <td th:text="${post.status ? '응답완료' : '미응답'}">답변여부</td>
             </tr>
             </tbody>
         </table>
