@@ -27,7 +27,12 @@ public class PostController {
         return "board";
     }
 
-    @PostMapping("/board")
+    @GetMapping("/post/create")
+    public String createPostForm() {
+        return "create-post";  // 문의글 작성 페이지로 이동
+    }
+
+    @PostMapping("/post/create")
     public String createPost(@RequestParam String title, @RequestParam String content, HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) return "redirect:/login";
