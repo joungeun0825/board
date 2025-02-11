@@ -118,8 +118,8 @@
 
     <p class="info">
       작성자: <span th:text="${post.user.username}">작성자</span> |
-      작성일: <span th:text="${#dates.format(post.createdDate, 'yyyy-MM-dd')}">작성일</span> |
-      수정일: <span th:text="${#dates.format(post.lastModifiedDate, 'yyyy-MM-dd')}">수정일</span>
+      작성일: <span th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd')}">작성일</span> |
+      수정일: <span th:text="${#temporals.format(post.lastModifiedDate, 'yyyy-MM-dd')}">수정일</span>
     </p>
 
     <p th:text="${post.content}">내용</p>

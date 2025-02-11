@@ -122,6 +122,7 @@
                 <th>내용</th>
                 <th>작성자</th>
                 <th>답변여부</th>
+                <th>작성일자</th>
             </tr>
             </thead>
             <tbody>
@@ -134,6 +135,7 @@
                 <td th:text="${post.content}">내용</td>
                 <td th:text="${post.user.username}">작성자</td>
                 <td th:text="${post.status ? '응답완료' : '미응답'}">답변여부</td>
+                <td th:text="${#temporals.format(post.createdDate, 'yyyy-MM-dd')}">작성일자</td>
             </tr>
             </tbody>
         </table>
