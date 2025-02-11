@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>글 상세보기</title>
+  <style>
+    /* 전체 페이지 스타일 */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+    }
+
+    /* 헤더 스타일 */
+    header {
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+    }
+
+    /* 메뉴 바 스타일 */
+    .menu {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    /* 사용자 메뉴 */
+    .user-menu {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .user-menu span {
+        font-size: 16px;
+    }
+
+    .user-menu button {
+        padding: 5px 10px;
+        font-size: 14px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .user-menu button:hover {
+        background-color: #d32f2f;
+    }
+
+    /* 본문 스타일 */
+    .content {
+        margin-top: 60px;  /* 헤더 높이만큼 여백을 추가 */
+        padding: 20px;
+    }
+
+    .post-detail {
+        background-color: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 20px 0;
+    }
+
+    .post-detail h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .post-detail p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .post-detail .info {
+        font-size: 14px;
+        color: #777;
+        margin-bottom: 10px;
+    }
+
+    /* 답변 여부 스타일 */
+    .status {
+        font-weight: bold;
+        color: #007bff;
+    }
+  </style>
+</head>
+<body>
+<!-- 헤더 영역 -->
+<header>
+  <div class="menu">
+    <h1 style="margin: 0; font-size: 24px;">게시판</h1>
+    <div class="user-menu">
+      <!-- 사용자 이름 출력 -->
+      <span th:text="'어서오세요 ' + ${session.user.username} + '님'"></span>
+
+      <!-- 로그아웃 버튼 -->
+      <form action="/logout" method="post" style="display:inline;">
+        <button type="submit">로그아웃</button>
+      </form>
+    </div>
+  </div>
+</header>
+
+<!-- 본문 콘텐츠 -->
+<div class="content">
+  <div class="post-detail">
+    <h2 th:text="${post.title}">제목</h2>
+
+    <p class="info">
+      작성자: <span th:text="${post.user.username}">작성자</span> |
+      작성일: <span th:text="${#dates.format(post.createdDate, 'yyyy-MM-dd')}">작성일</span> |
+      수정일: <span th:text="${#dates.format(post.lastModifiedDate, 'yyyy-MM-dd')}">수정일</span>
+    </p>
+
+    <p th:text="${post.content}">내용</p>
+
+    <div class="status">
+      답변여부: <span th:text="${post.status}">답변여부</span>
+    </div>
+
+    <!-- 수정 및 삭제 버튼 추가 -->
+    <div>
+      <a href="/post/edit/{id}" th:href="@{/post/edit/{id}(id=${post.id})}">수정</a> |
+      <a href="/post/delete/{id}" th:href="@{/post/delete/{id}(id=${post.id})}">삭제</a>
+    </div>
+  </div>
+
+  <!-- 답글 추가 폼  -->
+  <div>
+    <h3>답글 작성</h3>
+    <form action="/post/reply" method="post">
+      <input type="hidden" name="postId" th:value="${post.id}">
+      <div>
+        <label for="replyContent">답글 내용</label>
+        <textarea id="replyContent" name="replyContent" rows="4" required placeholder="답글을 작성하세요"></textarea>
+      </div>
+      <button type="submit">답글 작성</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

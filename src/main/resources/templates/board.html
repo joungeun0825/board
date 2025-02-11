@@ -78,6 +78,16 @@
             background-color: #f2f2f2;
         }
 
+        /* 링크 스타일 */
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -87,7 +97,7 @@
         <h1 style="margin: 0; font-size: 24px;">게시판</h1>
         <div class="user-menu">
             <!-- 사용자 이름 출력 -->
-            <span th:text="'어서오세요 ' + ${session.user.username}+ '님'"></span>
+            <span th:text="'어서오세요 ' + ${session.user.username} + '님'"></span>
 
             <!-- 로그아웃 버튼 -->
             <form action="/logout" method="post" style="display:inline;">
@@ -118,9 +128,11 @@
             <!-- 게시물 목록 출력 -->
             <tr th:each="post : ${posts}">
                 <td th:text="${post.id}">1</td>
-                <td th:text="${post.title}">제목</td>
+                <td>
+                    <a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.title}">제목</a>
+                </td>
                 <td th:text="${post.content}">내용</td>
-                <td th:text="${post.user.username}">제목</td>
+                <td th:text="${post.user.username}">작성자</td>
                 <td th:text="${post.status}">답변여부</td>
             </tr>
             </tbody>
