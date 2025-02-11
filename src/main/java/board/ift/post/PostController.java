@@ -3,6 +3,9 @@ package board.ift.post;
 import board.ift.user.User;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,13 +21,17 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/board")
-    public String boardPage(Model model, HttpSession session) {
+    public String boardPage(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page) {
         User user = (User) session.getAttribute("user");
         if (user == null) return "redirect:/login";
 
-        List<Post> posts = postService.getAllPosts();
-        model.addAttribute("posts", posts);
+        Pageable pageable = PageRequest.of(page, 3);
+        Page<Post> postPage = postService.getPosts(pageable);
+
+        model.addAttribute("posts", postPage.getContent());
         model.addAttribute("username", user.getUsername());
+        model.addAttribute("totalPages", postPage.getTotalPages());
+        model.addAttribute("currentPage", page);
         return "board";
     }
 

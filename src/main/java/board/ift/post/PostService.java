@@ -2,6 +2,8 @@ package board.ift.post;
 
 import board.ift.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,6 +40,10 @@ public class PostService {
     public void deletePost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid post Id"));
         postRepository.delete(post); // 게시글 삭제
+    }
+
+    public Page<Post> getPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
     }
 
     public Post getPostById(Long id) {

@@ -128,7 +128,7 @@
             <tbody>
             <!-- 게시물 목록 출력 -->
             <tr th:each="post : ${posts}">
-                <td th:text="${post.id}">1</td>
+                <td th:text="${post.id}"></td>
                 <td>
                     <a th:href="@{/post/{id}(id=${post.id})}" th:text="${post.title}">제목</a>
                 </td>
@@ -139,6 +139,20 @@
             </tr>
             </tbody>
         </table>
+
+        <div class="pagination">
+            <span th:if="${currentPage > 0}">
+                <a th:href="@{/board?page={currentPage}(currentPage=${currentPage - 1})}">&laquo; 이전</a>
+            </span>
+
+            <span th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}">
+                <a th:href="@{/board?page={pageNum}(pageNum=${pageNum})}" th:text="${pageNum + 1}">1</a>
+            </span>
+
+            <span th:if="${currentPage < totalPages - 1}">
+                <a th:href="@{/board?page={currentPage}(currentPage=${currentPage + 1})}">다음 &raquo;</a>
+            </span>
+        </div>
     </div>
 </div>
 </body>
